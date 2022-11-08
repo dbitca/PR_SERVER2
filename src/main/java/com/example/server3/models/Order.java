@@ -3,7 +3,6 @@ package com.example.server3.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
 
 public class Order {
     private int id;
