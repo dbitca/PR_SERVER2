@@ -1,13 +1,13 @@
-package com.example.server3;
+package com.example.Agregator.application;
 
-import com.example.server3.resources.KitchenServiceFirstCooks;
-import com.example.server3.resources.KitchenServiceSecondCooks;
+import com.example.Agregator.threads.ConsumerThreads;
+import com.example.Agregator.threads.ProducerThreads;
 
-public class Server3Service {
-    public static void InitializeFirstCooks() {
+public class AgregatorService {
+    public static void InitializeConsumerThreads() {
         try {
             for (int i = 0; i < 6; i++) {
-                new KitchenServiceFirstCooks("Cook1 " + String.valueOf(i));
+                new ConsumerThreads("Consumer thread " + String.valueOf(i));
                 //Thread.sleep(500);
             }
             Thread.sleep(1000);
@@ -16,10 +16,10 @@ public class Server3Service {
         }
     }
 
-    public static void InitializeSecondCooks() {
+    public static void InitializeProducerThreads() {
         try {
             for (int i = 0; i < 6; i++) {
-                new KitchenServiceSecondCooks("Cook2 " + String.valueOf(i));
+                new ProducerThreads("Producer thread " + String.valueOf(i));
                 //Thread.sleep(500);
             }
             Thread.sleep(1000);

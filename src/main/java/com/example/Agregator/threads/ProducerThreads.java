@@ -1,6 +1,6 @@
-package com.example.server3.resources;
+package com.example.Agregator.threads;
 
-import com.example.server3.models.Order;
+import com.example.Agregator.models.Object;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -11,20 +11,19 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class KitchenServiceSecondCooks implements Runnable {
+public class ProducerThreads implements Runnable {
 
     Thread t;
-    String cookname;
+    String threadName;
     int id;
     public static final ReentrantLock mutex = new ReentrantLock();
-    public static BlockingQueue<Order> orders = new LinkedBlockingQueue<>();
+    public static BlockingQueue<Object> objects = new LinkedBlockingQueue<>();
     static HttpHeaders headers = new HttpHeaders();
-
     private static RestTemplate restTemplate = new RestTemplate();
 
-    public KitchenServiceSecondCooks(String thread) {
-        cookname = thread;
-        t = new Thread(this, cookname);
+    public ProducerThreads(String thread) {
+        threadName = thread;
+        t = new Thread(this, threadName);
         System.out.println("New thread :" + t);
         t.start();
     }
@@ -34,13 +33,13 @@ public class KitchenServiceSecondCooks implements Runnable {
         while (true) {
             mutex.lock();
             try {
-                if (orders.size() > 0) {
-                    var order = orders.take();
+                if (objects.size() > 0) {
+                    var object = objects.take();
                   //  System.out.println("ThreadId" + Thread.currentThread().getId() + "is processing the order with id " + order.getId());
-                    sendOrders(order);
-                  //  System.out.println("ThreadId " + Thread.currentThread().getId() + "sent the order with id " + order.getId() + "to hall");
+                    sendObject(object);
+                  // System.out.println("ThreadId " + Thread.currentThread().getId() + "sent the order with id " + object.getId() + "to producer");
                     Thread.sleep(500);
-                    //System.out.println("Capacity of queue " + orders.size());
+                   // System.out.println("Capacity of queue " + objects.size());
                 }
             } catch (InterruptedException e) {
                 throw new RuntimeException();
@@ -50,19 +49,18 @@ public class KitchenServiceSecondCooks implements Runnable {
         }
     }
 
-    public static void sendOrders(Order order) {
+    public static void sendObject(Object object) {
         // set the media type of http header request
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         // create an entity which encapsulated the body (order) and the header of http request
-        HttpEntity<Order> entity = new HttpEntity<>(order, headers);
+        HttpEntity<Object> entity = new HttpEntity<>(object, headers);
         // send current order to kitchen
-         restTemplate.postForEntity("http://localhost:8080/hall/order", entity, Order.class);
+         restTemplate.postForEntity("http://localhost:8080/producer/object", entity, Object.class);
     }
 
-    public static void addOrder(Order order) {
-        // add incoming order to queue
-        orders.add(order);
+    public static void addObject(Object object) {
+        objects.add(object);
     }
 }

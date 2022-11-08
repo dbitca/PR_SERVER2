@@ -1,10 +1,10 @@
-package com.example.server3;
+package com.example.Agregator;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Server3ApplicationTests {
+class AgregatorApplicationTests {
 
     @Test
     void contextLoads() {
